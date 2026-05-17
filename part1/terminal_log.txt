@@ -1,0 +1,2 @@
+Replace this file with the terminal log from a successful `fly_straight.py` run.
+
