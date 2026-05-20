@@ -13,3 +13,5 @@ part2/logs/*
 
 *.log
 .DS_Store
+
+report/part2_training_log.md
