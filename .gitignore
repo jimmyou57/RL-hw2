@@ -7,9 +7,13 @@ env/
 
 part2/models/*
 !part2/models/.gitkeep
+!part2/models/ppo_drone.zip
 
 part2/logs/*
 !part2/logs/.gitkeep
+!part2/logs/training_curve.png
+
+part2/evaluation/ta_demo/
 
 *.log
 .DS_Store

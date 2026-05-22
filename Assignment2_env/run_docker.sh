@@ -10,6 +10,10 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+CONTAINER_REPO="/workspace/RL_Assignment2"
+
 GPU_ID=${GPU_ID:-3}
 VNC_PORT=${VNC_PORT:-5901}
 IMAGE=${IMAGE:-nsysu_drone_vnc:iron}
@@ -25,6 +29,7 @@ echo " Launching ${CONTAINER_NAME}"
 echo "   Image     : ${IMAGE}"
 echo "   GPU       : ${GPU_ID}"
 echo "   VNC port  : ${VNC_PORT} (host) -> 5901 (container)"
+echo "   Workspace : ${REPO_ROOT} -> ${CONTAINER_REPO}"
 echo "=================================================="
 
 docker run \
@@ -33,6 +38,8 @@ docker run \
     -p ${VNC_PORT}:5901 \
     --env=QT_X11_NO_MITSHM=1 \
     --privileged \
+    -v "${REPO_ROOT}:${CONTAINER_REPO}" \
+    -w "${CONTAINER_REPO}" \
     --name="${CONTAINER_NAME}" \
     --hostname="$(hostname)" \
     "${IMAGE}"
