@@ -1894,3 +1894,51 @@
 ### 清理
 
 - 移除 container 產生的 `part2/__pycache__/`，避免最後打包混入暫存檔。
+
+## 2026-05-27 - 模型輸出與 reward 統計
+
+### 模型輸出資料位置
+
+- `trajectory.csv` 記錄每個 step 的模型輸出與環境回饋：
+  - `raw_action_x/y/z`：PPO policy 原始輸出。
+  - `action_x/y/z`：乘上 `action_scale = 0.5` 後實際送到 `/simple_drone/cmd_vel` 的速度命令。
+  - `reward`：該 step 的 reward。
+  - `cumulative_reward`：該 episode 到目前為止的累積 reward。
+- `episodes.csv` 記錄每個 episode 的總結果：
+  - `total_reward`
+  - `final_reward`
+  - `final_distance_to_target`
+  - `final_speed`
+  - `is_success`
+
+### Nominal evaluation reward
+
+- 檔案：`part2/evaluation/final_hover/episodes.csv`
+- episodes：`10`
+- max total reward：`389.5427`
+- min total reward：`389.4681`
+- mean total reward：`389.5148`
+- max final-step reward：`301.6399`
+- best episode：episode `10`
+  - total reward：`389.5427`
+  - final distance：`0.09404 m`
+  - final speed：`0.03155 m/s`
+
+### Disturbance evaluation reward
+
+- 檔案：`part2/evaluation/disturbance_hover/episodes.csv`
+- episodes：`10`
+- max total reward：`390.6397`
+- min total reward：`380.9837`
+- mean total reward：`388.9638`
+- max final-step reward：`301.7114`
+- best episode：episode `4`
+  - total reward：`390.6397`
+  - final distance：`0.07440 m`
+  - final speed：`0.02326 m/s`
+
+### 解釋
+
+- `final_reward` 約 `301` 是因為最後達成 success 時會加上 `success_bonus = 300`。
+- `total_reward` 是整個 episode 50 steps 的累積值，比單一步 reward 更適合拿來比較 episode 表現。
+- 模型真正輸出的是連續動作 `[vx, vy, vz]`，reward 是環境根據狀態與 action 計算出的評估訊號。
